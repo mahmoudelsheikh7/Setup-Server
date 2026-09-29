@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xZenarch Home Server Setup – Guide</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--text:#1f2328;--muted:#59636e;--line:#d1d9e0;--accent:#0a7d5a;--code:#0d1117;--codetext:#e6edf3;--warn:#fff4d6;--warnline:#e3b341}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--muted:#9198a1;--line:#30363d;--accent:#3fb98a;--code:#010409;--warn:#2b2410;--warnline:#9e7a1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:48px 20px 32px;text-align:center;border-bottom:1px solid var(--line)}
+header h1{margin:0 0 8px;font-size:2rem}
+header p{margin:0 auto;max-width:640px;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px;position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav a{color:var(--text);text-decoration:none;font-size:.9rem;padding:4px 12px;border:1px solid var(--line);border-radius:99px}
+nav a:hover{border-color:var(--accent);color:var(--accent)}
+main{max-width:860px;margin:0 auto;padding:16px 20px 60px}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:20px 0}
+h2{margin:0 0 12px;font-size:1.4rem}
+h3{margin:20px 0 6px;font-size:1.05rem}
+p{margin:8px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:4px 0}
+code{background:rgba(127,127,127,.18);padding:1px 6px;border-radius:5px;font-size:.88em}
+.cmd{position:relative;margin:10px 0}
+pre{margin:0;background:var(--code);color:var(--codetext);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.88rem;line-height:1.5}
+pre code{background:none;padding:0}
+.copy{position:absolute;top:8px;right:8px;background:#30363d;color:#e6edf3;border:0;border-radius:6px;padding:3px 10px;font-size:.75rem;cursor:pointer}
+.copy:hover{background:var(--accent);color:#fff}
+.note{background:var(--warn);border-left:4px solid var(--warnline);padding:10px 14px;border-radius:6px;margin:12px 0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.mini{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.mini b{color:var(--accent)}
+details{border-bottom:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer;font-weight:600}
+footer{text-align:center;color:var(--muted);padding:24px;font-size:.9rem}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏠 0xZenarch Home Server Setup</h1>
+  <p>One interactive script that turns a Linux machine into a home server: shared files, network-wide ad blocking, and a VPN for remote access. Version 0.3</p>
+</header>
+<nav>
+  <a href="#overview">Overview</a><a href="#start">How to use</a><a href="#steps">What it does</a><a href="#after">After install</a><a href="#ports">Ports</a><a href="#files">Files &amp; backups</a><a href="#help">Troubleshooting</a><a href="#faq">FAQ</a>
+</nav>
+<main>
+
+<section id="overview">
+  <h2>Overview</h2>
+  <p>The script asks before every step, explains it in plain English, and lets you say <b>no</b> to anything. It backs up each config file before changing it and prints a personalised guide at the end.</p>
+  <div class="grid">
+    <div class="mini"><b>📁 Samba</b><br>A shared folder called <code>HomeServer</code> that your phone, laptop and TV can open over Wi-Fi.</div>
+    <div class="mini"><b>🛡️ AdGuard Home</b><br>Blocks ads and trackers for every device on your network, with no app needed on each one.</div>
+    <div class="mini"><b>🔐 WireGuard VPN</b><br>Connect securely to your home from anywhere to reach your files and keep ad blocking on mobile data.</div>
+  </div>
+  <h3>Supported systems</h3>
+  <div class="tbl"><table>
+    <tr><th>Family</th><th>Package manager</th><th>Examples</th></tr>
+    <tr><td>Debian-based</td><td>APT</td><td>Ubuntu, Kubuntu, Debian</td></tr>
+    <tr><td>Arch-based</td><td>Pacman</td><td>Arch Linux</td></tr>
+    <tr><td>Red Hat-based</td><td>DNF</td><td>Fedora</td></tr>
+  </table></div>
+  <h3>What you need</h3>
+  <ul>
+    <li>A Linux machine that stays on (a spare PC, mini-PC or Raspberry Pi-class device).</li>
+    <li>An internet connection and a user with <code>sudo</code> rights.</li>
+    <li>Access to your router's settings (for AdGuard DNS and the VPN port forward).</li>
+  </ul>
+</section>
+
+<section id="start">
+  <h2>How to use it</h2>
+  <h3>Option A – Review first (recommended)</h3>
+  <div class="cmd"><button class="copy">Copy</button><pre><code>git clone https://github.com/mahmoudelsheikh7/Setup-Server.git
+cd Setup-Server
+chmod +x setup_server.sh
+sudo ./setup_server.sh</code></pre></div>
+  <h3>Option B – One command</h3>
+  <div class="cmd"><button class="copy">Copy</button><pre><code>curl -sL https://raw.githubusercontent.com/mahmoudelsheikh7/Setup-Server/main/setup_server.sh | sudo bash</code></pre></div>
+  <div class="note"><b>Heads up:</b> Option B runs the script without you reading it first. Only do this with code you trust.</div>
+  <h3>While it runs</h3>
+  <ul>
+    <li>Answers in <code>[Y/n]</code> style: just press <b>Enter</b> to accept the capital-letter default.</li>
+    <li>Press <b>Ctrl+C</b> at any time to stop.</li>
+    <li>Forgot <code>sudo</code>? The script relaunches itself with it.</li>
+    <li>Extra options: <code>--help</code> and <code>--version</code>.</li>
+  </ul>
+</section>
+
+<section id="steps">
+  <h2>What each step does</h2>
+  <h3>Before the steps</h3>
+  <p>Detects your package manager, checks that you can reach github.com, and asks if you are ready.</p>
+
+  <h3>1. Samba – shared folder</h3>
+  <ol>
+    <li>Installs Samba if it is missing.</li>
+    <li>Asks which user may access the share, and creates <code>~/HomeServer</code> for that user.</li>
+    <li>Backs up <code>/etc/samba/smb.conf</code>, adds a <code>[HomeServer]</code> share, and validates it with <code>testparm</code>. If the config is broken, your original is restored.</li>
+    <li>On Fedora with SELinux, labels the folder so Samba can use it.</li>
+    <li>Starts the service (<code>smbd</code> on Ubuntu, <code>smb</code> on Fedora and Arch).</li>
+    <li>Asks you to set a <b>network password</b> (separate from your login password; typing is hidden).</li>
+    <li>Opens ports 139 and 445 in your firewall.</li>
+  </ol>
+
+  <h3>2. AdGuard Home – ad blocker</h3>
+  <ol>
+    <li>Frees port 53 if <code>systemd-resolved</code> is using it (sets <code>DNSStubListener=no</code>) and repoints <code>/etc/resolv.conf</code> so the server's own DNS keeps working.</li>
+    <li>Warns you if anything else still uses port 53.</li>
+    <li>Opens ports 53, 80 and 3000.</li>
+    <li>Downloads and runs the official AdGuard Home installer (installs to <code>/opt/AdGuardHome</code>). If it is already installed, this is skipped.</li>
+  </ol>
+
+  <h3>3. WireGuard – VPN</h3>
+  <ol>
+    <li>Explains that a router port forward will be needed.</li>
+    <li>If you also installed AdGuard, tells you which DNS to enter so the ad blocker works through the VPN.</li>
+    <li>Downloads and runs the well-known <code>angristan/wireguard-install</code> script, which creates the server and a first client profile.</li>
+    <li>Finds the generated <code>.conf</code> file and shows its location at the end.</li>
+  </ol>
+  <p>Each step is independent: you can install any one of them alone.</p>
+</section>
+
+<section id="after">
+  <h2>After installation</h2>
+  <p>Replace <code>&lt;SERVER_IP&gt;</code> with the address the script prints (for example <code>192.168.1.50</code>).</p>
+  <h3>📁 Open your shared folder</h3>
+  <div class="tbl"><table>
+    <tr><th>Device</th><th>Address</th></tr>
+    <tr><td>Linux / macOS / phones</td><td><code>smb://&lt;SERVER_IP&gt;/HomeServer</code></td></tr>
+    <tr><td>Windows</td><td><code>\\&lt;SERVER_IP&gt;\HomeServer</code></td></tr>
+  </table></div>
+  <p>Log in with your Samba username and the network password you chose.</p>
+
+  <h3>🛡️ Finish AdGuard Home</h3>
+  <ol>
+    <li>Open <code>http://&lt;SERVER_IP&gt;:3000</code> and follow the setup wizard.</li>
+    <li>Afterwards the dashboard is at <code>http://&lt;SERVER_IP&gt;</code> (unless you changed the port).</li>
+    <li><b>Easiest way to protect the whole network:</b> in your router settings, set the <b>DNS server</b> to <code>&lt;SERVER_IP&gt;</code>.</li>
+    <li><i>Advanced:</i> let AdGuard hand out IP addresses (DHCP) instead. Turn off the router's DHCP first, and never run two DHCP servers on one network.</li>
+  </ol>
+
+  <h3>🔐 Use the VPN</h3>
+  <ol>
+    <li>Import the generated <code>.conf</code> file (or scan its QR code) in the WireGuard app on your phone.</li>
+    <li><b>Required:</b> in your router, forward the <b>UDP port</b> you chose during setup to <code>&lt;SERVER_IP&gt;</code>. The script shows the port at the end.</li>
+    <li>To add more devices later, run the script again and choose WireGuard.</li>
+  </ol>
+
+  <div class="note"><b>Give the server a fixed IP.</b> Create a "DHCP reservation" for it in your router. If its address changes, the share, DNS and VPN forward will all stop working.</div>
+</section>
+
+<section id="ports">
+  <h2>Ports the script opens</h2>
+  <div class="tbl"><table>
+    <tr><th>Port</th><th>Service</th><th>Purpose</th></tr>
+    <tr><td>139/tcp, 445/tcp</td><td>Samba</td><td>File sharing</td></tr>
+    <tr><td>53/tcp, 53/udp</td><td>AdGuard Home</td><td>DNS (ad blocking)</td></tr>
+    <tr><td>3000/tcp</td><td>AdGuard Home</td><td>First-time setup wizard</td></tr>
+    <tr><td>80/tcp</td><td>AdGuard Home</td><td>Dashboard</td></tr>
+    <tr><td>UDP (your choice)</td><td>WireGuard</td><td>VPN, must be forwarded on the router</td></tr>
+  </table></div>
+  <p>The script supports <b>ufw</b> and <b>firewalld</b>. If ufw is installed but switched off, the rules are saved and apply if you enable it later. If no firewall is found, nothing needs opening.</p>
+  <div class="note"><b>Security:</b> never forward ports 53, 80, 139, 445 or 3000 on your router to the internet. Only the WireGuard UDP port should be forwarded.</div>
+</section>
+
+<section id="files">
+  <h2>Files it changes, and backups</h2>
+  <div class="tbl"><table>
+    <tr><th>File</th><th>Why</th></tr>
+    <tr><td><code>/etc/samba/smb.conf</code></td><td>Adds the <code>[HomeServer]</code> share</td></tr>
+    <tr><td><code>/etc/systemd/resolved.conf</code></td><td>Frees port 53 for AdGuard</td></tr>
+    <tr><td><code>/etc/resolv.conf</code></td><td>Keeps the server's own DNS working</td></tr>
+    <tr><td><code>/var/log/setup-server.log</code></td><td>Log of what the script did</td></tr>
+  </table></div>
+  <p>Backups are saved next to the original as <code>&lt;file&gt;.bak.YYYYMMDD-HHMMSS</code>. To undo a change:</p>
+  <div class="cmd"><button class="copy">Copy</button><pre><code>sudo cp /etc/samba/smb.conf.bak.YYYYMMDD-HHMMSS /etc/samba/smb.conf
+sudo systemctl restart smbd    # "smb" on Fedora / Arch</code></pre></div>
+  <p>To remove AdGuard Home:</p>
+  <div class="cmd"><button class="copy">Copy</button><pre><code>sudo /opt/AdGuardHome/AdGuardHome -s uninstall</code></pre></div>
+</section>
+
+<section id="help">
+  <h2>Troubleshooting</h2>
+  <details><summary>I can't open the shared folder</summary>
+    <p>Check the service is running (<code>systemctl status smbd</code>, or <code>smb</code> on Fedora/Arch), that you used the right server IP, and that you log in with the <b>Samba</b> password, not your login password. Reset it with <code>sudo smbpasswd -a YOUR_USER</code>.</p></details>
+  <details><summary>The script says port 53 is still in use</summary>
+    <p>See what is using it: <code>sudo ss -lntup | grep ':53 '</code>. Common culprits are <code>dnsmasq</code> or another DNS server. Stop or disable it, then run the script again.</p></details>
+  <details><summary>The server lost internet after the AdGuard step</summary>
+    <p>Restore the backup of <code>/etc/resolv.conf</code> (or <code>resolved.conf</code>) from the <code>.bak</code> files, then restart <code>systemd-resolved</code>. Also finish the AdGuard setup wizard: until it is done, nothing answers DNS on this machine.</p></details>
+  <details><summary>Devices are not getting ad blocking</summary>
+    <p>Make sure your router's DNS is set to the server IP, and reconnect the device to Wi-Fi so it picks up the change. Some phones use "Private DNS" or a browser's built-in secure DNS, which bypasses AdGuard.</p></details>
+  <details><summary>The VPN connects but nothing loads, or it will not connect</summary>
+    <p>Check that the chosen UDP port is forwarded to the server. If your provider uses CGNAT (you do not have a public IP), port forwarding cannot work; ask the provider for a public IP. If you use a dynamic IP, a dynamic DNS name helps.</p></details>
+  <details><summary>Something failed and I want to see what happened</summary>
+    <p>Read the log: <code>sudo less /var/log/setup-server.log</code>.</p></details>
+</section>
+
+<section id="faq">
+  <h2>FAQ</h2>
+  <details><summary>Is it safe to run the script twice?</summary>
+    <p>Yes. It will not add a second <code>[HomeServer]</code> share, and it skips AdGuard Home if it is already installed. Each run makes new timestamped backups.</p></details>
+  <details><summary>Do I have to install everything?</summary>
+    <p>No. Each of the three steps asks separately.</p></details>
+  <details><summary>Does it enable my firewall?</summary>
+    <p>No. It only adds rules. It never switches a firewall on or off, so it cannot lock you out of SSH.</p></details>
+  <details><summary>Where do the AdGuard and WireGuard installers come from?</summary>
+    <p>AdGuard Home uses AdGuard's official install script. WireGuard uses the open-source <code>angristan/wireguard-install</code> script. Both are downloaded from GitHub at run time.</p></details>
+  <details><summary>Can I change the shared folder location?</summary>
+    <p>By default it is <code>~/HomeServer</code>. To use another path, edit the <code>path =</code> line of the <code>[HomeServer]</code> section in <code>/etc/samba/smb.conf</code> and restart Samba.</p></details>
+</section>
+
+</main>
+<footer>Made by <a href="https://github.com/mahmoudelsheikh7/Setup-Server">0xZenarch</a> · Setup-Server v0.3</footer>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.parentElement.querySelector('code').innerText;
+    try{navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},1500)})}catch(e){}
+  });
+});
+</script>
+</body>
+</html>
