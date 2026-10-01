@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-#  0xZenarch Home Server Setup  (v0.3)
+#  Arcalc Home Server Setup  (v0.3)
 #
 #  Sets up, step by step and with your permission:
 #    1. Samba      - a shared folder on your network
@@ -69,7 +69,7 @@ trap 'echo; warn "Cancelled. Nothing further will be changed."; exit 130' INT
 case "${1:-}" in
   -h | --help)
     cat <<EOF
-0xZenarch Home Server Setup v$VERSION
+Arcalc Home Server Setup v$VERSION
 
 Usage: sudo bash setup_server.sh
 
@@ -492,14 +492,14 @@ print_guide() {
   say "      otherwise its address may change and things will stop working."
   say "    - Backups of changed files are next to the originals (*.bak.<date>)."
   say "    - A log of this session: $LOG_FILE"
-  say "\n${G}Enjoy your new home server, 0xZenarch! 🚀${NC}\n"
+  say "\n${G}Enjoy your new home server, Arcalc! 🚀${NC}\n"
 }
 
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 main() {
-  header "0xZenarch Home Server Setup  v$VERSION"
+  header "Arcalc Home Server Setup  v$VERSION"
   say "This script will guide you step by step. You can answer ${B}no${NC} to anything,"
   say "and every file it changes is backed up first. Press Ctrl+C at any time to stop."
   say "Just press ${B}Enter${NC} to accept the suggested answer shown in [brackets]."
