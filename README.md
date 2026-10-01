@@ -1,6 +1,6 @@
 # Setup-Server
 
-### 0xZenarch Home Server Setup
+### Arcalc Home Server Setup
 
 **Transform any Linux machine into a smart, fully-featured home server with a single command.**
 
@@ -71,4 +71,4 @@ Once the script finishes, it prints a terminal guide tailored to the services yo
 
 ---
 
-Made by [0xZenarch](https://github.com/mahmoudelsheikh7)
+Made by [Arcalc](https://github.com/mahmoudelsheikh7)
